@@ -1,0 +1,34 @@
+SHOWTIME INTEGRATION LOG
+
+Inputs inspected:
+- showtime-member1.zip (Member 1)
+- ShowTime_Member2_Files.zip (Member 2)
+- ShowTime_Member3_Files.zip (Member 3)
+- ShowTime_Member4_Files.zip (Member 4)
+
+Work performed:
+1. Extracted all four archives and inventoried their contents (17 submitted Java files: Member 1=2, Member 2=2, Member 3=2, Member 4=11).
+2. Preserved the submitted SeatClass, Booking, ItemStack, Bill, Report,
+   Person, Viewer, Adult, SeniorCitizen, Billing, Billable, BookingLogger,
+   SeatValidator, exception, and demo implementations.
+3. Normalized Java files into src/showtime and src/showtime/exceptions.
+4. Replaced Member 1 menu placeholders with booking, bill lookup and report
+   actions, retaining the five-option menu and seat chart.
+5. Integrated Member 2 Booking with Member 4 checked exception classes.
+6. Aligned Member 3 Bill with Member 4 Billable.calculateTotal(), while
+   retaining calculateBill() as a compatibility alias.
+7. Added recursive subtotal calculation and an overloaded bill lookup.
+8. Added an automated IntegrationTests class and command scripts.
+9. Compiled with javac --release 17 and ran automated plus console smoke tests.
+
+Known behavior/limitations:
+- In-memory bookings and reports do not persist between app launches.
+- BookingLogger persists a plain text log, but that log is not used to rebuild
+  the in-memory bill search/report index after restart.
+- Bill records are created per selected seat class, so a single multi-class
+  order may receive more than one bill ID/token.
+- Invalid numeric keyboard input is retried by the menu and booking prompts.
+
+No claim is made that this is production-ready or web-deployed.
+10. Connected the runtime Viewer discount rate to the overloaded Bill constructor;
+    Bill delegates discount/GST/total calculation to Member 4's Billing class.

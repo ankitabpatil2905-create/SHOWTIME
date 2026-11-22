@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHOWTIME - Admin Dashboard & Analytics</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="cinema-backdrop"></div>
+
+    <header class="navbar" id="main-navbar"></header>
+
+    <main class="section-container" style="max-width: 1200px; margin: 0 auto;">
+        <!-- Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1 style="font-size: 1.9rem; font-weight: 800;">Admin Management & Live Analytics</h1>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    Real-time cinema performance, ticket verifications, and show management
+                </p>
+            </div>
+            <div class="role-tag admin" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                🛡️ Secure Administrator Portal
+            </div>
+        </div>
+
+        <!-- Metric Stat Cards (Innovation Feature #6) -->
+        <div class="admin-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-total-revenue">₹0.00</div>
+                    <div class="stat-label">Total Cinema Revenue</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(0, 210, 211, 0.15); color: var(--accent-cyan);">🎟️</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-total-bookings">0</div>
+                    <div class="stat-label">Confirmed Bookings</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(255, 215, 0, 0.15); color: var(--accent-gold);">💺</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-tickets-sold">0</div>
+                    <div class="stat-label">Total Tickets Sold</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(76, 209, 55, 0.15); color: #4cd137;">⭐</div>
+                <div class="stat-info">
+                    <div class="stat-value" id="stat-popular-seat" style="font-size: 1.3rem;">-</div>
+                    <div class="stat-label">Most Popular Seat Class</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2-Column Section: QR Verifier & Analytics Breakdown -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2.5rem;">
+            <!-- Innovation Feature #4: QR Verifier -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.8rem;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📷</span> QR Digital Ticket Verification
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.2rem;">
+                    Verify ticket legitimacy using cryptographic payload checking against actual database records.
+                </p>
+
+                <form id="qr-verify-form">
+                    <div class="form-group">
+                        <label for="qr-verify-input">QR Payload / Barcode Scan String</label>
+                        <input type="text" id="qr-verify-input" class="form-control" placeholder="SHOWTIME|BKG1|TOKEN:1|GATE:Gate 1|..." required>
+                    </div>
+
+                    <div style="display: flex; gap: 0.8rem;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">
+                            Verify Ticket Now
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="testSampleQR('BKG1')">
+                            Test Sample QR
+                        </button>
+                    </div>
+                </form>
+
+                <div id="qr-verify-result" style="display: none; margin-top: 1.5rem;"></div>
+            </div>
+
+            <!-- Seat Category Popularity & Revenue -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.8rem;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>📊</span> Seat Category Performance
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                    Breakdown of tickets sold across the 6 hackathon seat classes.
+                </p>
+
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.15); color: var(--text-muted); font-size: 0.8rem;">
+                            <th style="padding: 0.5rem 1rem; text-align: left;">SEAT CLASS</th>
+                            <th style="padding: 0.5rem 1rem; text-align: right;">TICKETS BOOKED</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-seat-categories"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2-Column Section: Daily Trends & Add Show -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Movie-Wise Revenue Breakdown -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.8rem;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem;">
+                    🎬 Movie-Wise Gross Revenue
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                    Live box office collections per title.
+                </p>
+
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.15); color: var(--text-muted); font-size: 0.8rem;">
+                            <th style="padding: 0.5rem 1rem; text-align: left;">MOVIE TITLE</th>
+                            <th style="padding: 0.5rem 1rem; text-align: right;">TOTAL GROSS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-movie-revenue"></tbody>
+                </table>
+            </div>
+
+            <!-- Add Show Schedule -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 1.8rem;">
+                <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 0.4rem;">
+                    ➕ Schedule New Show
+                </h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                    Add a movie showtime and auto-generate its physical screen seat layout.
+                </p>
+
+                <form id="add-show-form">
+                    <div class="form-group">
+                        <label for="new-show-movie">Movie</label>
+                        <select id="new-show-movie" class="form-control">
+                            <option value="1">Inception (Sci-Fi)</option>
+                            <option value="2">Interstellar (Sci-Fi)</option>
+                            <option value="3">The Dark Knight (Action)</option>
+                            <option value="4">RRR (Action)</option>
+                            <option value="5">Oppenheimer (Drama)</option>
+                            <option value="6">Dune: Part Two (Sci-Fi)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-show-cinema">Cinema & City</label>
+                        <select id="new-show-cinema" class="form-control">
+                            <option value="1">SHOWTIME IMAX & PXL (Mumbai)</option>
+                            <option value="2">SHOWTIME Royal Cineplex (Bengaluru)</option>
+                            <option value="3">SHOWTIME Luxe Cinemas (Delhi NCR)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem;">
+                        <div class="form-group">
+                            <label for="new-show-screen">Screen</label>
+                            <input type="number" id="new-show-screen" value="1" min="1" max="10" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-show-date">Date</label>
+                            <input type="date" id="new-show-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-show-time">Time</label>
+                            <input type="time" id="new-show-time" value="19:00" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 0.5rem;">
+                        Schedule Show & Generate Seats
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+    <script>
+        // Set default date for show scheduling to today
+        document.getElementById('new-show-date').valueAsDate = new Date();
+    </script>
+</body>
+</html>

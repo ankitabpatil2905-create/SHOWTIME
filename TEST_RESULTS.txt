@@ -1,0 +1,35 @@
+SHOWTIME TEST RESULTS
+Environment: OpenJDK 21.0.12.1; compilation target Java 17.
+
+AUTOMATED INTEGRATION TESTS
+PASS – Adult pricing: 2 Front Stall x Rs.120 + 1 Couple Sofa x Rs.500 = Rs.873.20.
+PASS – Senior pricing: 3 Middle Stall x Rs.160 + 2 Wheelchair Bay x Rs.120 = Rs.679.68.
+PASS – Request 41 Middle Stall seats is rejected; available count remains unchanged.
+PASS – Invalid ID 999 raises SeatClassNotFoundException.
+PASS – Undo stack behavior (corresponds to -1 command).
+PASS – Finish/commit behavior (corresponds to 0 command).
+PASS – Booking ID generation (BKG1, BKG2 after reset).
+PASS – Odd/even gate allocation (odd Gate 1, even Gate 2).
+PASS – Bill search by booking ID.
+PASS – Daily report generation.
+PASS – Recursive subtotal calculation.
+PASS – Billable interface calculation.
+Result: 13 automated checks passed.
+
+CONSOLE SMOKE TESTS
+PASS – Non-numeric menu input ('abc') prints validation message and program continues.
+PASS – Adult interactive booking with 2 Front Stall and 1 Couple Sofa produced
+       line bills Rs.283.20 and Rs.590.00; combined total Rs.873.20.
+PASS – Application exited normally through menu option 5.
+
+NOT TESTED / NOT CLAIMED
+- No stress test of 10,000 bill records or 100 selection stack capacity.
+- No restart/recovery test for reconstructing bills from booking_log.txt;
+  the current design does not reconstruct in-memory reports/search from the log.
+- No graphical website or Antigravity conversion has been performed.
+PASS – Successful commit decrements selected seat availability.
+PASS – Interactive invalid ID 999 is caught; program continues to exit.
+PASS – Interactive non-numeric input is caught; program continues to exit.
+PASS – Full interactive senior booking produced line bills Rs.453.12 and
+       Rs.226.56; combined total Rs.679.68.
+PASS – Interactive -1 command removes the most recent selection; 0 then finishes.
